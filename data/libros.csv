@@ -1,0 +1,26 @@
+isbn,titulo,autor,peso,valor,genero,cantidad_disponible,cantidad_total
+978-958-42-5168-5,Cien Años de Soledad,Gabriel García Márquez,0.45,45000,Ficción,3,5
+978-958-42-1234-7,El Amor en los Tiempos del Cólera,Gabriel García Márquez,0.52,48000,Ficción,2,3
+978-607-07-2345-8,Rayuela,Julio Cortázar,0.68,55000,Ficción,0,2
+978-950-07-3456-9,Ficciones,Jorge Luis Borges,0.35,38000,Ficción,4,4
+978-987-629-123-4,La Casa de los Espíritus,Isabel Allende,0.58,52000,Ficción,2,4
+978-84-376-0494-7,Don Quijote de la Mancha,Miguel de Cervantes,3.2,75000,Clásico,1,2
+978-968-16-5678-2,Pedro Páramo,Juan Rulfo,0.28,32000,Ficción,3,3
+978-950-731-234-5,El Túnel,Ernesto Sabato,0.22,28000,Ficción,5,5
+978-958-30-4567-8,La Vorágine,José Eustasio Rivera,0.48,42000,Clásico,2,3
+978-84-339-6789-1,Crónica de una Muerte Anunciada,Gabriel García Márquez,0.31,35000,Ficción,0,6
+978-950-731-567-8,El Aleph,Jorge Luis Borges,0.42,40000,Ficción,3,3
+978-84-204-8244-7,Cien Sonetos de Amor,Pablo Neruda,0.25,30000,Poesía,0,4
+978-607-16-2890-3,La Sombra del Viento,Carlos Ruiz Zafón,2.5,62000,Ficción,2,5
+978-958-42-8765-4,El Otoño del Patriarca,Gabriel García Márquez,0.55,47000,Ficción,4,4
+978-84-666-5476-9,Los Detectives Salvajes,Roberto Bolaño,4.1,68000,Ficción,1,3
+978-950-731-890-2,Sobre Héroes y Tumbas,Ernesto Sabato,2.8,58000,Ficción,0,2
+978-968-411-567-3,La Muerte de Artemio Cruz,Carlos Fuentes,0.65,45000,Ficción,3,3
+978-607-07-8901-2,Aura,Carlos Fuentes,0.18,25000,Ficción,6,6
+978-84-376-2345-1,La Celestina,Fernando de Rojas,3.5,50000,Clásico,2,4
+978-950-07-9876-5,Rayuela (Edición Especial),Julio Cortázar,4.2,85000,Ficción,0,1
+978-987-629-456-7,Paula,Isabel Allende,0.72,54000,Biografía,5,5
+978-84-204-5678-9,Veinte Poemas de Amor,Pablo Neruda,0.15,22000,Poesía,8,8
+978-958-30-7890-4,María,Jorge Isaacs,2.3,38000,Clásico,1,3
+978-607-16-3456-8,El Laberinto de la Soledad,Octavio Paz,0.55,42000,Ensayo,0,2
+978-84-666-8901-2,2666,Roberto Bolaño,4.8,95000,Ficción,2,2

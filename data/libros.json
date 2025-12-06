@@ -1,0 +1,252 @@
+[
+    {
+        "isbn": "978-958-42-5168-5",
+        "titulo": "Cien Años de Soledad",
+        "autor": "Gabriel García Márquez",
+        "peso": 0.45,
+        "valor": 45000,
+        "genero": "Ficción",
+        "cantidad_disponible": 3,
+        "cantidad_total": 5
+    },
+    {
+        "isbn": "978-958-42-1234-7",
+        "titulo": "El Amor en los Tiempos del Cólera",
+        "autor": "Gabriel García Márquez",
+        "peso": 0.52,
+        "valor": 48000,
+        "genero": "Ficción",
+        "cantidad_disponible": 2,
+        "cantidad_total": 3
+    },
+    {
+        "isbn": "978-607-07-2345-8",
+        "titulo": "Rayuela",
+        "autor": "Julio Cortázar",
+        "peso": 0.68,
+        "valor": 55000,
+        "genero": "Ficción",
+        "cantidad_disponible": 0,
+        "cantidad_total": 2
+    },
+    {
+        "isbn": "978-950-07-3456-9",
+        "titulo": "Ficciones",
+        "autor": "Jorge Luis Borges",
+        "peso": 0.35,
+        "valor": 38000,
+        "genero": "Ficción",
+        "cantidad_disponible": 4,
+        "cantidad_total": 4
+    },
+    {
+        "isbn": "978-987-629-123-4",
+        "titulo": "La Casa de los Espíritus",
+        "autor": "Isabel Allende",
+        "peso": 0.58,
+        "valor": 52000,
+        "genero": "Ficción",
+        "cantidad_disponible": 2,
+        "cantidad_total": 4
+    },
+    {
+        "isbn": "978-84-376-0494-7",
+        "titulo": "Don Quijote de la Mancha",
+        "autor": "Miguel de Cervantes",
+        "peso": 3.2,
+        "valor": 75000,
+        "genero": "Clásico",
+        "cantidad_disponible": 1,
+        "cantidad_total": 2
+    },
+    {
+        "isbn": "978-968-16-5678-2",
+        "titulo": "Pedro Páramo",
+        "autor": "Juan Rulfo",
+        "peso": 0.28,
+        "valor": 32000,
+        "genero": "Ficción",
+        "cantidad_disponible": 3,
+        "cantidad_total": 3
+    },
+    {
+        "isbn": "978-950-731-234-5",
+        "titulo": "El Túnel",
+        "autor": "Ernesto Sabato",
+        "peso": 0.22,
+        "valor": 28000,
+        "genero": "Ficción",
+        "cantidad_disponible": 5,
+        "cantidad_total": 5
+    },
+    {
+        "isbn": "978-958-30-4567-8",
+        "titulo": "La Vorágine",
+        "autor": "José Eustasio Rivera",
+        "peso": 0.48,
+        "valor": 42000,
+        "genero": "Clásico",
+        "cantidad_disponible": 2,
+        "cantidad_total": 3
+    },
+    {
+        "isbn": "978-84-339-6789-1",
+        "titulo": "Crónica de una Muerte Anunciada",
+        "autor": "Gabriel García Márquez",
+        "peso": 0.31,
+        "valor": 35000,
+        "genero": "Ficción",
+        "cantidad_disponible": 0,
+        "cantidad_total": 6
+    },
+    {
+        "isbn": "978-950-731-567-8",
+        "titulo": "El Aleph",
+        "autor": "Jorge Luis Borges",
+        "peso": 0.42,
+        "valor": 40000,
+        "genero": "Ficción",
+        "cantidad_disponible": 3,
+        "cantidad_total": 3
+    },
+    {
+        "isbn": "978-84-204-8244-7",
+        "titulo": "Cien Sonetos de Amor",
+        "autor": "Pablo Neruda",
+        "peso": 0.25,
+        "valor": 30000,
+        "genero": "Poesía",
+        "cantidad_disponible": 0,
+        "cantidad_total": 4
+    },
+    {
+        "isbn": "978-607-16-2890-3",
+        "titulo": "La Sombra del Viento",
+        "autor": "Carlos Ruiz Zafón",
+        "peso": 2.5,
+        "valor": 62000,
+        "genero": "Ficción",
+        "cantidad_disponible": 2,
+        "cantidad_total": 5
+    },
+    {
+        "isbn": "978-958-42-8765-4",
+        "titulo": "El Otoño del Patriarca",
+        "autor": "Gabriel García Márquez",
+        "peso": 0.55,
+        "valor": 47000,
+        "genero": "Ficción",
+        "cantidad_disponible": 4,
+        "cantidad_total": 4
+    },
+    {
+        "isbn": "978-84-666-5476-9",
+        "titulo": "Los Detectives Salvajes",
+        "autor": "Roberto Bolaño",
+        "peso": 4.1,
+        "valor": 68000,
+        "genero": "Ficción",
+        "cantidad_disponible": 1,
+        "cantidad_total": 3
+    },
+    {
+        "isbn": "978-950-731-890-2",
+        "titulo": "Sobre Héroes y Tumbas",
+        "autor": "Ernesto Sabato",
+        "peso": 2.8,
+        "valor": 58000,
+        "genero": "Ficción",
+        "cantidad_disponible": 0,
+        "cantidad_total": 2
+    },
+    {
+        "isbn": "978-968-411-567-3",
+        "titulo": "La Muerte de Artemio Cruz",
+        "autor": "Carlos Fuentes",
+        "peso": 0.65,
+        "valor": 45000,
+        "genero": "Ficción",
+        "cantidad_disponible": 3,
+        "cantidad_total": 3
+    },
+    {
+        "isbn": "978-607-07-8901-2",
+        "titulo": "Aura",
+        "autor": "Carlos Fuentes",
+        "peso": 0.18,
+        "valor": 25000,
+        "genero": "Ficción",
+        "cantidad_disponible": 6,
+        "cantidad_total": 6
+    },
+    {
+        "isbn": "978-84-376-2345-1",
+        "titulo": "La Celestina",
+        "autor": "Fernando de Rojas",
+        "peso": 3.5,
+        "valor": 50000,
+        "genero": "Clásico",
+        "cantidad_disponible": 2,
+        "cantidad_total": 4
+    },
+    {
+        "isbn": "978-950-07-9876-5",
+        "titulo": "Rayuela (Edición Especial)",
+        "autor": "Julio Cortázar",
+        "peso": 4.2,
+        "valor": 85000,
+        "genero": "Ficción",
+        "cantidad_disponible": 0,
+        "cantidad_total": 1
+    },
+    {
+        "isbn": "978-987-629-456-7",
+        "titulo": "Paula",
+        "autor": "Isabel Allende",
+        "peso": 0.72,
+        "valor": 54000,
+        "genero": "Biografía",
+        "cantidad_disponible": 5,
+        "cantidad_total": 5
+    },
+    {
+        "isbn": "978-84-204-5678-9",
+        "titulo": "Veinte Poemas de Amor",
+        "autor": "Pablo Neruda",
+        "peso": 0.15,
+        "valor": 22000,
+        "genero": "Poesía",
+        "cantidad_disponible": 8,
+        "cantidad_total": 8
+    },
+    {
+        "isbn": "978-958-30-7890-4",
+        "titulo": "María",
+        "autor": "Jorge Isaacs",
+        "peso": 2.3,
+        "valor": 38000,
+        "genero": "Clásico",
+        "cantidad_disponible": 1,
+        "cantidad_total": 3
+    },
+    {
+        "isbn": "978-607-16-3456-8",
+        "titulo": "El Laberinto de la Soledad",
+        "autor": "Octavio Paz",
+        "peso": 0.55,
+        "valor": 42000,
+        "genero": "Ensayo",
+        "cantidad_disponible": 0,
+        "cantidad_total": 2
+    },
+    {
+        "isbn": "978-84-666-8901-2",
+        "titulo": "2666",
+        "autor": "Roberto Bolaño",
+        "peso": 4.8,
+        "valor": 95000,
+        "genero": "Ficción",
+        "cantidad_disponible": 2,
+        "cantidad_total": 2
+    }
+]
