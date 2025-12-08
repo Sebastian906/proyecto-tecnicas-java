@@ -56,8 +56,7 @@ public class Backtracking {
         
         @Override
         public String toString() {
-            return String.format("Solución: %d libros | Peso: %.2f Kg | Valor: $%,.0f",
-                               libros.size(), pesoTotal, valorTotal);
+            return String.format("Solución: %d libros | Peso: %.2f Kg | Valor: $%,.0f", libros.size(), pesoTotal, valorTotal);
         }
     }
     
@@ -87,13 +86,10 @@ public class Backtracking {
         
         System.out.println("\nBuscando combinación óptima con backtracking...");
         
-        backtrack(listaLibros, 0, solucionActual, mejorSolucion, pesoMaximo,
-                 mostrarExploracion, limiteOutput, nodosExplorados, lineasImpresas);
+        backtrack(listaLibros, 0, solucionActual, mejorSolucion, pesoMaximo, mostrarExploracion, limiteOutput, nodosExplorados, lineasImpresas);
         
-        System.out.println(String.format("Exploración completada: %,d nodos explorados", 
-                                       nodosExplorados[0]));
-        System.out.println(String.format("Solución óptima encontrada: %d libros", 
-                                       mejorSolucion[0].getLibros().size()));
+        System.out.println(String.format("Exploración completada: %,d nodos explorados", nodosExplorados[0]));
+        System.out.println(String.format("Solución óptima encontrada: %d libros", mejorSolucion[0].getLibros().size()));
         
         return mejorSolucion[0];
     }
@@ -130,9 +126,7 @@ public class Backtracking {
             if (solucionActual.getValorTotal() > mejorSolucion[0].getValorTotal()) {
                 mejorSolucion[0] = solucionActual.copia();
                 if (mostrarExploracion && lineasImpresas[0] < limiteOutput) {
-                    System.out.println(String.format("  → Mejor: %d libros, $%,.0f",
-                                                   mejorSolucion[0].getLibros().size(),
-                                                   mejorSolucion[0].getValorTotal()));
+                    System.out.println(String.format("  → Mejor: %d libros, $%,.0f", mejorSolucion[0].getLibros().size(), mejorSolucion[0].getValorTotal()));
                     lineasImpresas[0]++;
                 }
             }
@@ -144,8 +138,7 @@ public class Backtracking {
         // Opción 1: Incluir el libro si cabe en el peso máximo
         if (solucionActual.getPesoTotal() + libroActual.getPeso() <= pesoMaximo) {
             solucionActual.agregarLibro(libroActual);
-            backtrack(listaLibros, indice + 1, solucionActual, mejorSolucion, pesoMaximo,
-                     mostrarExploracion, limiteOutput, nodosExplorados, lineasImpresas);
+            backtrack(listaLibros, indice + 1, solucionActual, mejorSolucion, pesoMaximo, mostrarExploracion, limiteOutput, nodosExplorados, lineasImpresas);
             solucionActual.quitarLibro();
         }
         
@@ -169,9 +162,7 @@ public class Backtracking {
             List<Libro> listaLibros,
             double pesoMaximo) {
         
-        System.out.println("═══════════════════════════════════════════════════════");
         System.out.println("Backtracking - Optimización de Estantería");
-        System.out.println("═══════════════════════════════════════════════════════");
         System.out.println("\nParámetros:");
         System.out.println(String.format("  • Total de libros disponibles: %d", listaLibros.size()));
         System.out.println(String.format("  • Peso máximo del estante: %.1f Kg", pesoMaximo));
@@ -180,23 +171,18 @@ public class Backtracking {
         
         SolucionEstanteria mejor = optimizarEstanteria(listaLibros, pesoMaximo, true, 50);
         
-        System.out.println("\n═══════════════════════════════════════════════════════");
         System.out.println("SOLUCIÓN ÓPTIMA ENCONTRADA:");
-        System.out.println("═══════════════════════════════════════════════════════");
         System.out.println(String.format("  • Número de libros: %d", mejor.getLibros().size()));
-        System.out.println(String.format("  • Peso total: %.2f Kg / %.1f Kg", 
-                                       mejor.getPesoTotal(), pesoMaximo));
+        System.out.println(String.format("  • Peso total: %.2f Kg / %.1f Kg", mejor.getPesoTotal(), pesoMaximo));
         System.out.println(String.format("  • Valor total: $%,.0f COP", mejor.getValorTotal()));
-        System.out.println(String.format("  • Espacio disponible: %.2f Kg", 
-                                       pesoMaximo - mejor.getPesoTotal()));
+        System.out.println(String.format("  • Espacio disponible: %.2f Kg", pesoMaximo - mejor.getPesoTotal()));
         
         if (!mejor.getLibros().isEmpty()) {
             System.out.println("\nLibros seleccionados:");
             int i = 1;
             for (Libro libro : mejor.getLibros()) {
                 System.out.println(String.format("  %d. %s", i, libro.getTitulo()));
-                System.out.println(String.format("     ISBN: %s | Peso: %.2f Kg | Valor: $%,.0f",
-                                               libro.getIsbn(), libro.getPeso(), libro.getValor()));
+                System.out.println(String.format("     ISBN: %s | Peso: %.2f Kg | Valor: $%,.0f", libro.getIsbn(), libro.getPeso(), libro.getValor()));
                 i++;
             }
         }

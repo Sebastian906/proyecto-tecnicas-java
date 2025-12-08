@@ -31,8 +31,7 @@ public class FuerzaBruta {
         
         @Override
         public String toString() {
-            return String.format("Peso: %.2f Kg (Exceso: %.2f Kg) - %d libros", 
-                               pesoTotal, exceso, libros.size());
+            return String.format("Peso: %.2f Kg (Exceso: %.2f Kg) - %d libros", pesoTotal, exceso, libros.size());
         }
     }
     
@@ -60,13 +59,10 @@ public class FuerzaBruta {
         
         // Generar todas las combinaciones posibles
         List<Libro> combinacionActual = new ArrayList<>();
-        generarCombinaciones(listaLibros, numLibros, 0, combinacionActual, 
-                           combinacionesPeligrosas, pesoMaximo, totalCombinaciones);
+        generarCombinaciones(listaLibros, numLibros, 0, combinacionActual, combinacionesPeligrosas, pesoMaximo, totalCombinaciones);
         
-        System.out.println(String.format("Exploración completada: %,d combinaciones analizadas", 
-                                       totalCombinaciones[0]));
-        System.out.println(String.format("Combinaciones peligrosas encontradas: %d", 
-                                       combinacionesPeligrosas.size()));
+        System.out.println(String.format("Exploración completada: %,d combinaciones analizadas", totalCombinaciones[0]));
+        System.out.println(String.format("Combinaciones peligrosas encontradas: %d", combinacionesPeligrosas.size()));
         
         return combinacionesPeligrosas;
     }
@@ -113,8 +109,7 @@ public class FuerzaBruta {
         // Generar combinaciones
         for (int i = inicio; i < listaLibros.size(); i++) {
             combinacionActual.add(listaLibros.get(i));
-            generarCombinaciones(listaLibros, numLibros, i + 1, combinacionActual,
-                               combinacionesPeligrosas, pesoMaximo, totalCombinaciones);
+            generarCombinaciones(listaLibros, numLibros, i + 1, combinacionActual, combinacionesPeligrosas, pesoMaximo, totalCombinaciones);
             combinacionActual.remove(combinacionActual.size() - 1);
         }
     }
@@ -136,9 +131,7 @@ public class FuerzaBruta {
             double pesoMaximo,
             int mostrarPrimeras) {
         
-        System.out.println("═══════════════════════════════════════════════════════");
         System.out.println("Exploración Exhaustiva - Fuerza Bruta");
-        System.out.println("═══════════════════════════════════════════════════════");
         System.out.println("\nParámetros:");
         System.out.println(String.format("  • Total de libros: %d", listaLibros.size()));
         System.out.println(String.format("  • Libros por combinación: %d", numLibros));
@@ -153,16 +146,12 @@ public class FuerzaBruta {
         int[] contadores = {0, 0}; // [combinacion_num, peligrosas_encontradas]
         
         List<Libro> combinacionActual = new ArrayList<>();
-        explorarConDemo(listaLibros, numLibros, 0, combinacionActual, 
-                       combinacionesPeligrosas, pesoMaximo, mostrarPrimeras, contadores);
+        explorarConDemo(listaLibros, numLibros, 0, combinacionActual, combinacionesPeligrosas, pesoMaximo, mostrarPrimeras, contadores);
         
-        System.out.println("\n═══════════════════════════════════════════════════════");
         System.out.println("RESULTADO DE LA EXPLORACIÓN:");
-        System.out.println("═══════════════════════════════════════════════════════");
         System.out.println(String.format("  • Combinaciones exploradas: %,d", contadores[0]));
         System.out.println(String.format("  • Combinaciones PELIGROSAS encontradas: %d", contadores[1]));
-        System.out.println(String.format("  • Porcentaje peligrosas: %.2f%%", 
-                                       (contadores[1] * 100.0 / contadores[0])));
+        System.out.println(String.format("  • Porcentaje peligrosas: %.2f%%", (contadores[1] * 100.0 / contadores[0])));
         
         return combinacionesPeligrosas;
     }
@@ -203,8 +192,7 @@ public class FuerzaBruta {
                     isbns.add(isbn.substring(Math.max(0, isbn.length() - 4)));
                 }
                 String estado = pesoTotal > pesoMaximo ? "PELIGROSA" : "Segura";
-                System.out.println(String.format("  [%3d] ISBNs: %s | Peso: %5.2f Kg | %s",
-                                               contadores[0], isbns, pesoTotal, estado));
+                System.out.println(String.format("  [%3d] ISBNs: %s | Peso: %5.2f Kg | %s", contadores[0], isbns, pesoTotal, estado));
             } else if (contadores[0] == mostrarPrimeras + 1) {
                 long restantes = calcularCombinaciones(listaLibros.size(), numLibros) - mostrarPrimeras;
                 System.out.println(String.format("  ... (explorando %,d combinaciones más) ...", restantes));
@@ -222,8 +210,7 @@ public class FuerzaBruta {
         
         for (int i = inicio; i < listaLibros.size(); i++) {
             combinacionActual.add(listaLibros.get(i));
-            explorarConDemo(listaLibros, numLibros, i + 1, combinacionActual,
-                          combinacionesPeligrosas, pesoMaximo, mostrarPrimeras, contadores);
+            explorarConDemo(listaLibros, numLibros, i + 1, combinacionActual, combinacionesPeligrosas, pesoMaximo, mostrarPrimeras, contadores);
             combinacionActual.remove(combinacionActual.size() - 1);
         }
     }
