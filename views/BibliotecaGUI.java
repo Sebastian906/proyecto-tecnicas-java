@@ -127,20 +127,64 @@ public class BibliotecaGUI extends JFrame {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
             "Archivos CSV/JSON", "csv", "json"));
+        fileChooser.setCurrentDirectory(new File("data"));
         
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
                 File archivo = fileChooser.getSelectedFile();
-                List<Libro> libros = LectorArchivo.cargarLibros(archivo.getAbsolutePath());
-                int agregados = 0;
-                for (Libro libro : libros) {
-                    if (gestor.agregarLibro(libro)) agregados++;
+                String rutaArchivo = archivo.getAbsolutePath();
+                
+                // Validar que el archivo existe
+                if (!archivo.exists()) {
+                    JOptionPane.showMessageDialog(this, 
+                        "El archivo no existe: " + rutaArchivo, 
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
-                JOptionPane.showMessageDialog(this, 
-                    String.format("Se agregaron %d/%d libros", agregados, libros.size()));
+                
+                // Validar extensión
+                String extension = rutaArchivo.substring(rutaArchivo.lastIndexOf('.')).toLowerCase();
+                if (!extension.equals(".csv") && !extension.equals(".json")) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Formato no soportado: " + extension + "\nSolo se aceptan .csv y .json", 
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                System.out.println("Cargando archivo: " + rutaArchivo);
+                List<Libro> libros = LectorArchivo.cargarLibros(rutaArchivo);
+                
+                if (libros == null || libros.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, 
+                        "El archivo no contiene libros", 
+                        "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                
+                int agregados = 0;
+                int duplicados = 0;
+                for (Libro libro : libros) {
+                    if (gestor.agregarLibro(libro)) {
+                        agregados++;
+                    } else {
+                        duplicados++;
+                    }
+                }
+                
+                StringBuilder msg = new StringBuilder();
+                msg.append(String.format("Se agregaron %d libros\n", agregados));
+                if (duplicados > 0) {
+                    msg.append(String.format("%d libros duplicados no se agregaron", duplicados));
+                }
+                
+                JOptionPane.showMessageDialog(this, msg.toString(), 
+                    "Carga completada", JOptionPane.INFORMATION_MESSAGE);
                 actualizarTablaLibros();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), 
+                System.err.println("Error al cargar archivo:");
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, 
+                    "Error al cargar el archivo:\n" + ex.getMessage(), 
                     "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -178,15 +222,44 @@ public class BibliotecaGUI extends JFrame {
         JButton btnGuardar = new JButton("Guardar");
         btnGuardar.addActionListener(e -> {
             try {
+                // Validar campos vacíos
+                String isbn = txtISBN.getText().trim();
+                String titulo = txtTitulo.getText().trim();
+                String autor = txtAutor.getText().trim();
+                String pesoStr = txtPeso.getText().trim();
+                String valorStr = txtValor.getText().trim();
+                String genero = txtGenero.getText().trim();
+                String cantidadStr = txtCantidad.getText().trim();
+                
+                if (isbn.isEmpty() || titulo.isEmpty() || autor.isEmpty() || 
+                    pesoStr.isEmpty() || valorStr.isEmpty() || genero.isEmpty() || cantidadStr.isEmpty()) {
+                    JOptionPane.showMessageDialog(dialog, 
+                        "Todos los campos son obligatorios", 
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                // Validar valores numéricos
+                double peso = Double.parseDouble(pesoStr);
+                double valor = Double.parseDouble(valorStr);
+                int cantidad = Integer.parseInt(cantidadStr);
+                
+                if (peso <= 0 || valor <= 0 || cantidad <= 0) {
+                    JOptionPane.showMessageDialog(dialog, 
+                        "Peso, Valor y Cantidad deben ser mayores a 0", 
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
                 Libro libro = new Libro(
-                    txtISBN.getText(),
-                    txtTitulo.getText(),
-                    txtAutor.getText(),
-                    Double.parseDouble(txtPeso.getText()),
-                    Double.parseDouble(txtValor.getText()),
-                    txtGenero.getText(),
-                    Integer.parseInt(txtCantidad.getText()),
-                    Integer.parseInt(txtCantidad.getText()),
+                    isbn,
+                    titulo,
+                    autor,
+                    peso,
+                    valor,
+                    genero,
+                    cantidad,
+                    cantidad,
                     null
                 );
                 
@@ -198,6 +271,10 @@ public class BibliotecaGUI extends JFrame {
                     JOptionPane.showMessageDialog(dialog, "El libro ya existe", 
                         "Error", JOptionPane.ERROR_MESSAGE);
                 }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(dialog, 
+                    "Peso y Valor deben ser números. Cantidad debe ser un número entero", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(dialog, "Datos inválidos: " + ex.getMessage(), 
                     "Error", JOptionPane.ERROR_MESSAGE);
@@ -284,33 +361,47 @@ public class BibliotecaGUI extends JFrame {
     
     private void agregarUsuario() {
         JDialog dialog = new JDialog(this, "Agregar Usuario", true);
-        dialog.setLayout(new GridLayout(5, 2, 5, 5));
-        dialog.setSize(400, 200);
+        dialog.setLayout(new BorderLayout(10, 10));
+        dialog.setSize(500, 250);
         dialog.setLocationRelativeTo(this);
+        
+        // Panel central con GridLayout para los campos
+        JPanel panelCentral = new JPanel(new GridLayout(4, 2, 10, 10));
+        panelCentral.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         
         JTextField txtID = new JTextField();
         JTextField txtNombre = new JTextField();
         JTextField txtApellidos = new JTextField();
         JTextField txtDireccion = new JTextField();
         
-        dialog.add(new JLabel("ID:"));
-        dialog.add(txtID);
-        dialog.add(new JLabel("Nombre:"));
-        dialog.add(txtNombre);
-        dialog.add(new JLabel("Apellidos:"));
-        dialog.add(txtApellidos);
-        dialog.add(new JLabel("Dirección:"));
-        dialog.add(txtDireccion);
+        panelCentral.add(new JLabel("ID:"));
+        panelCentral.add(txtID);
+        panelCentral.add(new JLabel("Nombre:"));
+        panelCentral.add(txtNombre);
+        panelCentral.add(new JLabel("Apellidos:"));
+        panelCentral.add(txtApellidos);
+        panelCentral.add(new JLabel("Dirección:"));
+        panelCentral.add(txtDireccion);
         
+        // Panel inferior centrado para el botón
+        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton btnGuardar = new JButton("Guardar");
         btnGuardar.addActionListener(e -> {
             try {
-                Usuario usuario = new Usuario(
-                    txtID.getText(),
-                    txtNombre.getText(),
-                    txtApellidos.getText(),
-                    txtDireccion.getText()
-                );
+                // Validar campos vacíos
+                String id = txtID.getText().trim();
+                String nombre = txtNombre.getText().trim();
+                String apellidos = txtApellidos.getText().trim();
+                String direccion = txtDireccion.getText().trim();
+                
+                if (id.isEmpty() || nombre.isEmpty() || apellidos.isEmpty() || direccion.isEmpty()) {
+                    JOptionPane.showMessageDialog(dialog, 
+                        "Todos los campos son obligatorios", 
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                Usuario usuario = new Usuario(id, nombre, apellidos, direccion);
                 
                 if (gestor.agregarUsuario(usuario)) {
                     JOptionPane.showMessageDialog(dialog, "Usuario agregado");
@@ -326,7 +417,10 @@ public class BibliotecaGUI extends JFrame {
             }
         });
         
-        dialog.add(btnGuardar);
+        panelBoton.add(btnGuardar);
+        
+        dialog.add(panelCentral, BorderLayout.CENTER);
+        dialog.add(panelBoton, BorderLayout.SOUTH);
         dialog.setVisible(true);
     }
     
@@ -510,25 +604,184 @@ public class BibliotecaGUI extends JFrame {
     // ========== PANEL ESTANTES ==========
     
     private JPanel crearPanelEstantes() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel panel = new JPanel(new BorderLayout(10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
+        // Panel de botones superiores
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton btnAgregar = new JButton("Agregar Estante");
         JButton btnAsignar = new JButton("Asignar Libro");
         JButton btnListar = new JButton("Listar Estantes");
         JButton btnFuerzaBruta = new JButton("Análisis Peligroso");
         JButton btnBacktracking = new JButton("Optimización");
         
+        btnAgregar.addActionListener(e -> agregarEstante());
+        btnAsignar.addActionListener(e -> asignarLibroAEstante());
+        btnListar.addActionListener(e -> listarEstantes());
         btnFuerzaBruta.addActionListener(e -> analisisPeligroso());
         btnBacktracking.addActionListener(e -> optimizacionEstanteria());
         
-        panel.add(btnAgregar);
-        panel.add(btnAsignar);
-        panel.add(btnListar);
-        panel.add(btnFuerzaBruta);
-        panel.add(btnBacktracking);
+        panelBotones.add(btnAgregar);
+        panelBotones.add(btnAsignar);
+        panelBotones.add(btnListar);
+        panelBotones.add(btnFuerzaBruta);
+        panelBotones.add(btnBacktracking);
+        
+        // Tabla para listar estantes
+        String[] columnas = {"ID Estante", "Espacios Disponibles", "Libros Asignados"};
+        DefaultTableModel modeloEstantes = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        JTable tablaEstantes = new JTable(modeloEstantes);
+        JScrollPane scrollPane = new JScrollPane(tablaEstantes);
+        
+        panel.add(panelBotones, BorderLayout.NORTH);
+        panel.add(scrollPane, BorderLayout.CENTER);
         
         return panel;
     }
+    
+    private void agregarEstante() {
+        JDialog dialog = new JDialog(this, "Agregar Estante", true);
+        dialog.setLayout(new BorderLayout(10, 10));
+        dialog.setSize(450, 200);
+        dialog.setLocationRelativeTo(this);
+        
+        // Panel central con GridLayout para los campos
+        JPanel panelCentral = new JPanel(new GridLayout(2, 2, 10, 10));
+        panelCentral.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        
+        JTextField txtID = new JTextField();
+        JTextField txtEspacios = new JTextField();
+        
+        panelCentral.add(new JLabel("ID Estante:"));
+        panelCentral.add(txtID);
+        panelCentral.add(new JLabel("Espacios (cantidad de libros):"));
+        panelCentral.add(txtEspacios);
+        
+        // Panel inferior centrado para el botón
+        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JButton btnGuardar = new JButton("Guardar");
+        btnGuardar.addActionListener(e -> {
+            try {
+                String id = txtID.getText().trim();
+                String espaciosStr = txtEspacios.getText().trim();
+                
+                if (id.isEmpty() || espaciosStr.isEmpty()) {
+                    JOptionPane.showMessageDialog(dialog, "Todos los campos son obligatorios", 
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                int espacios = Integer.parseInt(espaciosStr);
+                if (espacios <= 0) {
+                    JOptionPane.showMessageDialog(dialog, "Los espacios deben ser mayores a 0", 
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                Estante estante = new Estante(id, espacios);
+                if (gestor.agregarEstante(estante)) {
+                    JOptionPane.showMessageDialog(dialog, "Estante agregado correctamente");
+                    dialog.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(dialog, "El estante ya existe", 
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(dialog, "Los espacios deben ser un número entero", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(dialog, "Error: " + ex.getMessage(), 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        
+        panelBoton.add(btnGuardar);
+        
+        dialog.add(panelCentral, BorderLayout.CENTER);
+        dialog.add(panelBoton, BorderLayout.SOUTH);
+        dialog.setVisible(true);
+    }
+    
+    private void asignarLibroAEstante() {
+        JDialog dialog = new JDialog(this, "Asignar Libro a Estante", true);
+        dialog.setLayout(new BorderLayout(10, 10));
+        dialog.setSize(450, 200);
+        dialog.setLocationRelativeTo(this);
+        
+        // Panel central con GridLayout para los campos
+        JPanel panelCentral = new JPanel(new GridLayout(2, 2, 10, 10));
+        panelCentral.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        
+        JTextField txtISBN = new JTextField();
+        JTextField txtIDEstante = new JTextField();
+        
+        panelCentral.add(new JLabel("ISBN del Libro:"));
+        panelCentral.add(txtISBN);
+        panelCentral.add(new JLabel("ID del Estante:"));
+        panelCentral.add(txtIDEstante);
+        
+        // Panel inferior centrado para el botón
+        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JButton btnAsignar = new JButton("Asignar");
+        btnAsignar.addActionListener(e -> {
+            try {
+                String isbn = txtISBN.getText().trim();
+                String idEstante = txtIDEstante.getText().trim();
+                
+                if (isbn.isEmpty() || idEstante.isEmpty()) {
+                    JOptionPane.showMessageDialog(dialog, "Todos los campos son obligatorios", 
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                GestorBiblioteca.ResultadoOperacion resultado = gestor.asignarLibroAEstante(isbn, idEstante);
+                if (resultado.isExito()) {
+                    JOptionPane.showMessageDialog(dialog, resultado.getMensaje());
+                    dialog.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(dialog, resultado.getMensaje(), 
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(dialog, "Error: " + ex.getMessage(), 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        
+        panelBoton.add(btnAsignar);
+        
+        dialog.add(panelCentral, BorderLayout.CENTER);
+        dialog.add(panelBoton, BorderLayout.SOUTH);
+        dialog.setVisible(true);
+    }
+    
+    private void listarEstantes() {
+        List<Estante> estantes = gestor.listarEstantes();
+        
+        StringBuilder msg = new StringBuilder("LISTA DE ESTANTES\n\n");
+        
+        if (estantes.isEmpty()) {
+            msg.append("No hay estantes registrados");
+        } else {
+            for (Estante estante : estantes) {
+                msg.append(String.format("ID: %s | Espacios: %d | Libros: %d | Peso: %.2f / %.2f Kg\n",
+                    estante.getId(),
+                    estante.getCantidad(),
+                    estante.getLibrosAsignados().size(),
+                    estante.getPesoActual(),
+                    estante.getPesoMaximo()));
+            }
+        }
+        
+        JOptionPane.showMessageDialog(this, msg.toString(), "Estantes", 
+            JOptionPane.INFORMATION_MESSAGE);
+    }
+
     
     private void analisisPeligroso() {
         List<Libro> libros = gestor.obtenerTodosLosLibros();
@@ -581,6 +834,7 @@ public class BibliotecaGUI extends JFrame {
         JButton btnPesoAutor = new JButton("Peso por Autor");
         
         btnEstadisticas.addActionListener(e -> mostrarEstadisticas());
+        btnReporte.addActionListener(e -> generarReporte());
         btnValorAutor.addActionListener(e -> valorPorAutor());
         btnPesoAutor.addActionListener(e -> pesoPorAutor());
         
@@ -596,6 +850,81 @@ public class BibliotecaGUI extends JFrame {
         GestorBiblioteca.Estadisticas stats = gestor.obtenerEstadisticas();
         JOptionPane.showMessageDialog(this, stats.toString(), "Estadísticas", 
             JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    private void generarReporte() {
+        try {
+            // Crear carpeta reports si no existe
+            File carpetaReports = new File("reports");
+            if (!carpetaReports.exists()) {
+                if (!carpetaReports.mkdir()) {
+                    JOptionPane.showMessageDialog(this, 
+                        "No se pudo crear la carpeta reports", 
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+            
+            // Obtener estadísticas
+            GestorBiblioteca.Estadisticas stats = gestor.obtenerEstadisticas();
+            
+            // Crear nombre del archivo con timestamp
+            String timestamp = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss").format(new java.util.Date());
+            String nombreArchivo = "reports/Reporte_Estadisticas_" + timestamp + ".txt";
+            
+            // Obtener todos los libros
+            List<Libro> libros = gestor.obtenerTodosLosLibros();
+            
+            // Crear contenido del reporte
+            StringBuilder contenido = new StringBuilder();
+            contenido.append("================================================\n");
+            contenido.append("REPORTE DE ESTADÍSTICAS DEL SISTEMA\n");
+            contenido.append("================================================\n\n");
+            contenido.append("Fecha y hora: ").append(new java.util.Date()).append("\n\n");
+            
+            contenido.append("--- ESTADÍSTICAS GENERALES ---\n");
+            contenido.append("Total de Libros: ").append(stats.totalLibros).append("\n");
+            contenido.append("Total de Usuarios: ").append(stats.totalUsuarios).append("\n");
+            contenido.append("Préstamos Activos: ").append(stats.prestamosActivos).append("\n");
+            contenido.append("Total de Reservas: ").append(stats.totalReservas).append("\n");
+            contenido.append("Total de Estantes: ").append(stats.totalEstantes).append("\n\n");
+            
+            contenido.append("--- DETALLES DE LIBROS ---\n");
+            if (libros.isEmpty()) {
+                contenido.append("No hay libros registrados en el sistema.\n");
+            } else {
+                contenido.append(String.format("%-15s %-30s %-20s %-10s %-10s\n", 
+                    "ISBN", "Título", "Autor", "Peso(kg)", "Valor($)"));
+                contenido.append("=".repeat(85)).append("\n");
+                
+                for (Libro libro : libros) {
+                    contenido.append(String.format("%-15s %-30s %-20s %-10.2f %-10.0f\n",
+                        libro.getIsbn(),
+                        libro.getTitulo().length() > 29 ? libro.getTitulo().substring(0, 29) : libro.getTitulo(),
+                        libro.getAutor().length() > 19 ? libro.getAutor().substring(0, 19) : libro.getAutor(),
+                        libro.getPeso(),
+                        libro.getValor()));
+                }
+            }
+            
+            contenido.append("\n================================================\n");
+            contenido.append("FIN DEL REPORTE\n");
+            contenido.append("================================================\n");
+            
+            // Escribir archivo
+            java.nio.file.Files.write(
+                java.nio.file.Paths.get(nombreArchivo),
+                contenido.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8)
+            );
+            
+            JOptionPane.showMessageDialog(this, 
+                "Reporte generado exitosamente en:\n" + nombreArchivo, 
+                "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, 
+                "Error al generar reporte: " + ex.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
     
     private void valorPorAutor() {

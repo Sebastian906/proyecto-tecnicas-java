@@ -140,26 +140,43 @@ public class LectorArchivo {
         try {
             JsonNode rootNode = mapper.readTree(archivo);
             
-            if (!rootNode.isArray()) {
+            // Verificar si es un arreglo o un objeto con propiedad "libros"
+            JsonNode librosNode = rootNode;
+            if (rootNode.isObject() && rootNode.has("libros")) {
+                librosNode = rootNode.get("libros");
+            }
+            
+            if (!librosNode.isArray()) {
                 throw new IllegalArgumentException(
-                    "El archivo JSON debe contener un arreglo de libros"
+                    "El archivo JSON debe contener un arreglo de libros o un objeto con propiedad 'libros'"
                 );
             }
             
-            for (int idx = 0; idx < rootNode.size(); idx++) {
+            for (int idx = 0; idx < librosNode.size(); idx++) {
                 try {
-                    JsonNode item = rootNode.get(idx);
+                    JsonNode item = librosNode.get(idx);
                     
-                    String isbn = item.get("isbn").asText();
-                    String titulo = item.get("titulo").asText();
-                    String autor = item.get("autor").asText();
-                    double peso = item.get("peso").asDouble();
-                    double valor = item.get("valor").asDouble();
-                    String genero = item.get("genero").asText();
+                    // Campos obligatorios
+                    String isbn = getJsonField(item, "isbn", "").trim();
+                    String titulo = getJsonField(item, "titulo", "").trim();
+                    String autor = getJsonField(item, "autor", "").trim();
+                    String pesoStr = getJsonField(item, "peso", "0").trim();
+                    String valorStr = getJsonField(item, "valor", "0").trim();
+                    String genero = getJsonField(item, "genero", "").trim();
                     
-                    int cantidadDisponible = item.has("cantidad_disponible") ? 
+                    // Validaciones
+                    if (isbn.isEmpty() || titulo.isEmpty() || autor.isEmpty()) {
+                        System.err.println("Advertencia: Elemento " + idx + " incompleto, saltando...");
+                        continue;
+                    }
+                    
+                    double peso = Double.parseDouble(pesoStr);
+                    double valor = Double.parseDouble(valorStr);
+                    
+                    // Campos opcionales
+                    int cantidadDisponible = item.has("cantidad_disponible") && !item.get("cantidad_disponible").isNull() ? 
                         item.get("cantidad_disponible").asInt() : 1;
-                    int cantidadTotal = item.has("cantidad_total") ? 
+                    int cantidadTotal = item.has("cantidad_total") && !item.get("cantidad_total").isNull() ? 
                         item.get("cantidad_total").asInt() : 1;
                     String estanteId = item.has("estante_id") && !item.get("estante_id").isNull() ? 
                         item.get("estante_id").asText() : null;
@@ -168,9 +185,9 @@ public class LectorArchivo {
                                           cantidadDisponible, cantidadTotal, estanteId);
                     libros.add(libro);
                     
-                } catch (NullPointerException e) {
+                } catch (NumberFormatException e) {
                     throw new IllegalArgumentException(
-                        "Falta una propiedad en elemento " + idx + ": " + e.getMessage()
+                        "Error en formato numérico en elemento " + idx + ": " + e.getMessage()
                     );
                 } catch (Exception e) {
                     throw new IllegalArgumentException(
@@ -185,6 +202,16 @@ public class LectorArchivo {
         
         System.out.println("Se cargaron " + libros.size() + " libros desde " + rutaArchivo);
         return libros;
+    }
+    
+    /**
+     * Método auxiliar para obtener campos del JSON de forma segura
+     */
+    private static String getJsonField(JsonNode node, String fieldName, String defaultValue) {
+        if (node.has(fieldName) && !node.get(fieldName).isNull()) {
+            return node.get(fieldName).asText();
+        }
+        return defaultValue;
     }
     
     /**
